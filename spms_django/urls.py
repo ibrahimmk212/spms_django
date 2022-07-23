@@ -3,13 +3,14 @@ from django.urls import include, path
 from rest_framework import routers
 
 from institute.views import FacultyViewSet, DepartmentViewSet
-from project.views import AllocationViewSet,AllocationReadWriteViewSet
+from project.views import AllocationViewSet, AllocationReadWriteViewSet, ProposalViewSet
 
 router = routers.DefaultRouter()
 router.register(r'faculties', FacultyViewSet)
 router.register(r'departments', DepartmentViewSet)
 router.register(r'allocation', AllocationViewSet)
 router.register(r'allocationrw', AllocationReadWriteViewSet)
+router.register(r'proposals', ProposalViewSet)
 
 
 # Additionally, we include login URLs for the browsable API.f

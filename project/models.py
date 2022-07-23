@@ -10,16 +10,28 @@ class Allocation(models.Model):
     coordinator = models.ForeignKey(Account, related_name="coordinator", on_delete=models.CASCADE)
     session = models.ForeignKey(Session, related_name='Session', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.student.full_name
+
 
     def __str__(self):
-        return self.session
+        return self.student
 
 
-# class Topic(models.Model):
-#     title = models.TextField(max_length=300)
-#     allocation = models.ForeignKey(Allocation, on_delete=models.CASCADE)
-#     progress = models.TextField(max_length=200)
-#     score = models.ForeignKey(Account, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return self.title
+class Proposal(models.Model):
+    TOPIC_APPROVAL = (
+            (0, 'not_approved'),
+            (1, 'topic_1'),
+            (2, 'topic_2'),
+            (3, 'topic_3'),
+            (4, 'rejected'),
+    )
+    student = models.ForeignKey(Account, on_delete=models.CASCADE, max_length=300)
+    topic1 = models.TextField(max_length=300)
+    topic2 = models.TextField(max_length=300)
+    topic3 = models.TextField(max_length=300)
+    message = models.TextField(max_length=300, blank=True)
+    approval = models.PositiveSmallIntegerField(choices=TOPIC_APPROVAL, default=0)
+
+    def __str__(self):
+        return self.student.full_name
