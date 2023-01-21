@@ -8,6 +8,7 @@ djangorestframework = "*"
 django-cors-headers = "*"
 django-import-export = "*"
 django-jazzmin = "*"
+whitenoise = "*"
 
 [dev-packages]
 

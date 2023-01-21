@@ -21,6 +21,7 @@ class Department(models.Model):
 
 class Session(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    active = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
 
     def __str__(self):

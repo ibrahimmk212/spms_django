@@ -1,3 +1,5 @@
+from rest_framework.permissions import IsAuthenticated
+
 from account.models import Account
 from account.serializer import AccountSerializer
 from django.http import Http404
@@ -5,10 +7,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.contrib.auth.hashers import make_password
 
-class SupervisorsList(APIView):
+
+class UsersList(APIView):
+    # permission_classes = (IsAuthenticated)
     # List all supervisors, or create a new user.
     def get(self, request, userstype, format=None):
+        users = {}
         if userstype == 'students':
             users = Account.objects.filter(role=1)
         elif userstype == 'supervisors':
@@ -19,6 +27,8 @@ class SupervisorsList(APIView):
             users = Account.objects.filter(role=4)
         elif userstype == 'admins':
             users = Account.objects.filter(role=5)
+        elif userstype == 'all':
+            users = Account.objects.filter()
 
         serializer = AccountSerializer(users, many=True)
         return Response(serializer.data)
@@ -31,7 +41,8 @@ class SupervisorsList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SupervisorsDetail(APIView):
+class UsersDetail(APIView):
+
         # Retrieve, update or delete a user instance.
 
     def get_object(self, pk):
@@ -57,5 +68,12 @@ class SupervisorsDetail(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@receiver(pre_save, sender=Account)
+def hash_password(sender, instance, **kwargs):
+    if instance.phone:
+        if instance.pk is None:
+            instance.password = make_password(instance.phone)
 
 

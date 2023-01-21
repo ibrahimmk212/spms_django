@@ -10,11 +10,11 @@ class AccountManager(BaseUserManager):
         if not full_name:
             return ValueError("Name is required")
         if not email:
-            return ValueError("id number is required")
+            return ValueError("email is required")
         if not id_number:
             return ValueError("id number is required")
         if not phone:
-            return ValueError("id number is required")
+            return ValueError("phone number is required")
 
         user = self.model(
             full_name=full_name,
@@ -24,7 +24,7 @@ class AccountManager(BaseUserManager):
             role=role,
         )
 
-        user.set_password(phone)
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -35,8 +35,6 @@ class AccountManager(BaseUserManager):
             id_number=id_number,
             phone=phone,
             role=role
-
-
         )
 
         user.set_password(phone)
@@ -52,17 +50,16 @@ class Account(AbstractBaseUser):
     USER_TYPE_CHOICES = (
             (1, 'student'),
             (2, 'supervisor'),
-            (3, 'external_supervisor'),
+            # (3, 'external_supervisor'),
             (4, 'coordinator'),
             (5, 'admin')
         )
 
-    title = models.CharField(verbose_name='Title', max_length=200, null=True)
+    title = models.CharField(verbose_name='Title', max_length=200, null=True, blank=True)
     full_name = models.CharField(verbose_name='Full Name', max_length=200, null=True)
     id_number = models.CharField(verbose_name='ID Number', max_length=200, unique=True)
     email = models.CharField(verbose_name='Email', max_length=200, unique=True, null=True)
     phone = models.CharField(verbose_name='Phone', max_length=200, unique=True, null=True)
-    department = models.ForeignKey(Department, verbose_name="Department", on_delete=models.CASCADE, null=True)
     password = models.CharField(max_length=225, unique=False)
     role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
     is_admin = models.BooleanField(default=False)
@@ -79,8 +76,6 @@ class Account(AbstractBaseUser):
 
     USERNAME_FIELD = 'id_number'
     REQUIRED_FIELDS = ['full_name', 'email', 'phone']
-
-
 
 
     def has_perm(self, perm, obj=None):

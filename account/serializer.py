@@ -10,7 +10,6 @@ class AccountSerializer(serializers.ModelSerializer):
                   'id_number',
                   'email',
                   'phone',
-                  'department',
                   'role',
                   'date_joined',
                   'last_login')

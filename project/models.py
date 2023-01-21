@@ -14,8 +14,6 @@ class Allocation(models.Model):
         return self.student.full_name
 
 
-    def __str__(self):
-        return self.student
 
 
 class Proposal(models.Model):
@@ -32,6 +30,31 @@ class Proposal(models.Model):
     topic3 = models.TextField(max_length=300)
     message = models.TextField(max_length=300, blank=True)
     approval = models.PositiveSmallIntegerField(choices=TOPIC_APPROVAL, default=0)
+
+    def __str__(self):
+        return self.student.full_name
+
+
+
+class ChapterApproval(models.Model):
+    proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE, max_length=300)
+    chapter1 = models.BooleanField(default=False)
+    chapter2 = models.BooleanField(default=False)
+    chapter3 = models.BooleanField(default=False)
+    chapter4 = models.BooleanField(default=False)
+    chapter5 = models.BooleanField(default=False)
+    
+
+    def __str__(self):
+        return "hh"
+
+
+class Grading(models.Model):
+    student = models.ForeignKey(Account, on_delete=models.CASCADE)
+    proposal = models.IntegerField(default=0, blank=False)
+    internal = models.IntegerField(default=0, blank=False)
+    external = models.IntegerField(default=0, blank=False)
+    report = models.IntegerField(default=0, blank=False)
 
     def __str__(self):
         return self.student.full_name
